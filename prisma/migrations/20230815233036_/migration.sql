@@ -1,8 +1,13 @@
 -- CreateTable
 CREATE TABLE "cliente" (
     "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "status" TEXT NOT NULL,
+    "userId" SERIAL NOT NULL,
+    "nameOwner" TEXT NOT NULL,
+    "nameBusiness" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "numberContact" TEXT NOT NULL,
+    "status" BOOLEAN NOT NULL,
+    "password" TEXT NOT NULL,
 
     CONSTRAINT "cliente_pkey" PRIMARY KEY ("id")
 );
@@ -14,7 +19,7 @@ CREATE TABLE "subscricao_pagamento" (
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
     "paymentMethod" TEXT NOT NULL,
-    "paymentStatus" TEXT NOT NULL,
+    "paymentStatus" BOOLEAN NOT NULL,
     "nextBillingDate" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "subscricao_pagamento_pkey" PRIMARY KEY ("id")
@@ -30,11 +35,12 @@ CREATE TABLE "time" (
 );
 
 -- CreateTable
-CREATE TABLE "Setor" (
+CREATE TABLE "setor" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "accountId" INTEGER NOT NULL,
 
-    CONSTRAINT "Setor_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "setor_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -93,10 +99,13 @@ ALTER TABLE "subscricao_pagamento" ADD CONSTRAINT "subscricao_pagamento_accountI
 ALTER TABLE "time" ADD CONSTRAINT "time_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "cliente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "setor" ADD CONSTRAINT "setor_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "cliente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "timePorSetor" ADD CONSTRAINT "timePorSetor_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "time"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "timePorSetor" ADD CONSTRAINT "timePorSetor_sectorId_fkey" FOREIGN KEY ("sectorId") REFERENCES "Setor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "timePorSetor" ADD CONSTRAINT "timePorSetor_sectorId_fkey" FOREIGN KEY ("sectorId") REFERENCES "setor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "colaborador" ADD CONSTRAINT "colaborador_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "time"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

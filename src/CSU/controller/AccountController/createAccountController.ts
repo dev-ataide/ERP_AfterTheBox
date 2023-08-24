@@ -4,13 +4,12 @@ import { CreateAccountService } from "../../services/AccountServices/createAccou
 
 class CreateAccountController {
     async handle (req:Request, res: Response){
-        const {name,nameBusiness,userid,email,numberContact,status,password} = req.body;
+        const {nameOwner,nameBusiness,email,numberContact,status,password} = req.body;
 
         const createAccountService = new CreateAccountService();
         const account = await createAccountService.execute({
-            name,
+            nameOwner,
             nameBusiness,
-            userid,
             email,
             numberContact,
             status,

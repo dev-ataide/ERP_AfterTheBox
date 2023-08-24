@@ -1,109 +1,113 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model Account {
-  id            Int          @id @default(autoincrement())
-  userId        Int          @unique @default(autoincrement())
-  nameOwner     String
-  nameBusiness  String
-  email         String
-  numberContact String
-  status        Boolean
-  password      String
-  subscriptions Subscription[]
-  teams         Team[]
-  // ... Outros campos relacionados à conta, se necessário
-  @@map("cliente")
-}
-
-model Subscription {
-  id          Int      @id @default(autoincrement())
-  accountId   Int
-  startDate   DateTime
-  endDate     DateTime
-  paymentMethod String
-  paymentStatus String
-  nextBillingDate DateTime
-  account     Account @relation(fields: [accountId], references: [id])
-  // ... Outros campos relacionados à assinatura
-    @@map("subscricao_pagamento")
-
-}
-
-model Team {
-  id          Int      @id @default(autoincrement())
-  accountId   Int
-  name        String
-  teamToSector TeamToSector[]
-  members     Member[]  @relation("TeamToMember")
-  account     Account   @relation(fields: [accountId], references: [id])
-  // ... Outros campos relacionados à equipe, se necessário
-    @@map("time")
-
-}
-
-model Sector {
-  id          Int      @id @default(autoincrement())
-  name        String
-  teamToSector TeamToSector[]
-  // ... Outros campos relacionados ao setor, se necessário
-    @@map("setor")
-
-}
-
-model TeamToSector {
-  id          Int      @id @default(autoincrement())
-  teamId      Int
-  sectorId    Int
-  team        Team     @relation(fields: [teamId], references: [id])
-  sector      Sector   @relation(fields: [sectorId], references: [id])
-    @@map("timePorSetor")
-
-}
-
-model Member {
-  id          Int      @id @default(autoincrement())
-  teamId      Int
-  name        String
-  age         Int
-  phoneNumber String
-  email       String
-  cpf         String
-  payment     Float
-  paymentMethod String
-  team        Team     @relation("TeamToMember", fields: [teamId], references: [id])
-  @@map("colaborador")
-
-  // ... Outros campos relacionados ao colaborador, se necessário
-}
-
-model Expense {
-  id         Int      @id @default(autoincrement())
-  accountId  Int
-  name       String
-  type       String   // "fixo" ou "flutuante"
-  amount     Float
-  // ... Outros campos relacionados a despesas
-  @@map("despesa")
-
-}
-
-model Revenue {
-  id         Int      @id @default(autoincrement())
-  accountId  Int
-  name       String
-  type       String   // "fixo" ou "flutuante"
-  amount     Float
-  // ... Outros campos relacionados a rendas
-    @@map("receita")
-
-}
+    provider = "prisma-client-js"
+  }
+  
+  datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+  }
+  
+  model Account {
+    id            Int         @id @default(autoincrement())
+    userId        Int         @unique @default(autoincrement())
+    nameOwner     String
+    nameBusiness  String
+    email         String
+    numberContact String
+    status        Boolean
+    password      String
+    subscriptions Subscription[]
+    sector        Sector[]
+    teams         Team[]
+    // ... Outros campos relacionados à conta, se necessário
+    @@map("cliente")
+  }
+  
+  model Subscription {
+    id          Int      @id @default(autoincrement())
+    accountId   Int
+    startDate   DateTime
+    endDate     DateTime
+    paymentMethod String
+    paymentStatus Boolean
+    nextBillingDate DateTime
+    account     Account @relation(fields: [accountId], references: [id])
+    // ... Outros campos relacionados à assinatura
+      @@map("subscricao_pagamento")
+  
+  }
+  
+  model Team {
+    id          Int      @id @default(autoincrement())
+    accountId   Int
+    name        String
+    teamToSector TeamToSector[]
+    members     Member[]  @relation("TeamToMember")
+    account     Account   @relation(fields: [accountId], references: [id])
+    // ... Outros campos relacionados à equipe, se necessário
+      @@map("time")
+  
+  }
+  
+  model Sector {
+    id          Int      @id @default(autoincrement())
+    name        String
+    teamToSector TeamToSector[]
+    accountId   Int       // Change the type to Int
+    account     Account   @relation(fields: [accountId], references: [id])
+    // ... Outros campos relacionados ao setor, se necessário
+      @@map("setor")
+  
+  }
+  
+  model TeamToSector {
+    id          Int      @id @default(autoincrement())
+    teamId      Int
+    sectorId    Int
+    team        Team     @relation(fields: [teamId], references: [id])
+    sector      Sector   @relation(fields: [sectorId], references: [id])
+      @@map("timePorSetor")
+  
+  }
+  
+  model Member {
+    id          Int      @id @default(autoincrement())
+    teamId      Int
+    name        String
+    age         Int
+    phoneNumber String
+    email       String
+    cpf         String
+    payment     Float
+    paymentMethod String
+    team        Team     @relation("TeamToMember", fields: [teamId], references: [id])
+    @@map("colaborador")
+  
+    // ... Outros campos relacionados ao colaborador, se necessário
+  }
+  
+  model Expense {
+    id         Int      @id @default(autoincrement())
+    accountId  Int
+    name       String
+    type       String   // "fixo" ou "flutuante"
+    amount     Float
+    // ... Outros campos relacionados a despesas
+    @@map("despesa")
+  
+  }
+  
+  model Revenue {
+    id         Int      @id @default(autoincrement())
+    accountId  Int
+    name       String
+    type       String   // "fixo" ou "flutuante"
+    amount     Float
+    // ... Outros campos relacionados a rendas
+      @@map("receita")
+  }
+  
